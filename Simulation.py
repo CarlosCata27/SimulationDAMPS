@@ -65,7 +65,7 @@ for x in range(Filas):
     Circuitos.append([])
     for y in range(Columnas):
         Circuitos[x].append([])
-        for z in range(4):
+        for z in range(3):
            Circuitos[x][y].append(0)
 
 #Llenar el numero correspondiente de slot
@@ -75,47 +75,44 @@ for i in range(Filas):
         Circuitos[i][j][0]=Llenador
         Llenador +=1
 #Pasar la lista a una matriz tridimensional       
-Circuitos = np.array(Circuitos).reshape(Filas,Columnas,4)
+Circuitos = np.array(Circuitos).reshape(Filas,Columnas,3)
 
 
 Nllamada=1
 Segundero = (Nllamada*Ritmoarribo)+(mu*26)
 Llenador=1
 Pllamadas = 100
+Aceptadas,Rechazadas=0,0
 while (Segundero<=hp and Nllamada<=N_ev and Llenador <=N_ev):
-    #time.sleep(Ritmoarribo)
-   
+    time.sleep(Ritmoarribo)
     for i in range(Filas):
         for j in range(Columnas):
-            if(Circuitos[i][j][2]==0):
-
+            if(Llenador==N_ev):
+                break
+            elif(Circuitos[i][j][2]==0 ):
                 #Asignación de la llamada
                 #Proceso de rechazo o admisión (Método probabilístico utilizando el porcetaje de bloque de Erlang B)
                 #nB = 0.01 -> 1% [Se pierden 1 de cada 100 llamadas]
-                time.sleep(1)
                 Pllamadas -= 1
                 if Pllamadas > 0:
                     Circuitos[i][j][1]=Llenador #Indicador del número de llamada
                     Circuitos[i][j][2]=H #Duración de la llamada
-                    Circuitos[i][j][3] = 1 #Llamada aceptada
                     Llenador +=1
-                    print("Accepted")
-                    print(Circuitos[i][j])
+                    Aceptadas+=1
                 else:
                     Circuitos[i][j][1]=Llenador #Indicador del número de llamada
                     Circuitos[i][j][2]=0 #Duración de la llamada
-                    Circuitos[i][j][3] = 0 #Llamada aceptada
-                    print("No Accepted")
-                    print(Circuitos[i][j])
+                    Llenador +=1
+                    Rechazadas+=1
 
                     #Volvemos a las 100 llamadas
                     Pllamadas = 100
-                    
             else:
                 Circuitos[i][j][2]-=1
-            
-    # print(Circuitos)
-    #time.sleep(mu)
-    
+    print(Circuitos)
+    time.sleep(mu)
     Nllamada +=1
     Segundero = (Nllamada*Ritmoarribo)+(mu*26)
+
+print("Las llamadas aceptadas durante toda la simulacion fueron ",Aceptadas)
+print('Las llamadas rechazadas durante toda la simulacion fueron',Rechazadas)

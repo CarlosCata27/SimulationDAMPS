@@ -16,7 +16,6 @@ N_ev = N*L
 Porcentajeerror = 0.01
 E1plusiA= (ErlangB*Porcentajeerror)/(N_ev+1+(ErlangB*Porcentajeerror))
 E1plusiA = round(E1plusiA,10)
-print(E1plusiA)
 
 #Intensidad de trafico
 lambda_ = N_ev/hp

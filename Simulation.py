@@ -89,7 +89,7 @@ for i in range(int(CR+1)):
     LlamadasP.append(random.randint(0,N_ev))
 
 while (Segundero<=hp and Nllamada<=N_ev and Llenador <=N_ev):
-    #time.sleep(Ritmoarribo)
+    time.sleep(Ritmoarribo)
     for i in range(Filas):
         for j in range(Columnas):
             if(Llenador==N_ev+1):
@@ -108,7 +108,7 @@ while (Segundero<=hp and Nllamada<=N_ev and Llenador <=N_ev):
             else:
                 Circuitos[i][j][2]-=1
     print(Circuitos)
-    #time.sleep(mu)
+    time.sleep(mu)
     Nllamada +=1
     Segundero = (Nllamada*Ritmoarribo)+(mu*26)
 

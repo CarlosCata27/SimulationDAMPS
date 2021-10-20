@@ -16,6 +16,7 @@ N_ev = N*L
 Porcentajeerror = 0.01
 E1plusiA= (ErlangB*Porcentajeerror)/(N_ev+1+(ErlangB*Porcentajeerror))
 E1plusiA = round(E1plusiA,10)
+print(E1plusiA)
 
 #Intensidad de trafico
 lambda_ = N_ev/hp
@@ -34,6 +35,7 @@ nA=666*8 #Numero de canales * 8 slots para cada uno
 
 #Gestiones atendidas
 CA = nA*lambda_
+CA=round(CA,2)
 
 #Trafico cursado mediante erlang B
 CY=CA*(1-Porcentajeerror)
@@ -55,6 +57,7 @@ TiempoPromedio = TiempoW*lambda_
 
 import time
 import numpy as np
+import random
 
 #Combinacion, el primer valor es el numero de circuito, el segundo es el numero de llamada entrante y el tercero es el cronometro de los 120 segundos que le quedan dentro de la circuiteria
 Filas = 26
@@ -81,36 +84,32 @@ Circuitos = np.array(Circuitos).reshape(Filas,Columnas,3)
 Nllamada=1
 Segundero = (Nllamada*Ritmoarribo)+(mu*26)
 Llenador=1
-Pllamadas = 100
+LlamadasP=[]
 Aceptadas,Rechazadas=0,0
+for i in range(int(CR+1)):
+    LlamadasP.append(random.randint(0,N_ev))
+
 while (Segundero<=hp and Nllamada<=N_ev and Llenador <=N_ev):
-    time.sleep(Ritmoarribo)
+    #time.sleep(Ritmoarribo)
     for i in range(Filas):
         for j in range(Columnas):
-            if(Llenador==N_ev):
+            if(Llenador==N_ev+1):
                 break
             elif(Circuitos[i][j][2]==0 ):
                 #Asignación de la llamada
-                #Proceso de rechazo o admisión (Método probabilístico utilizando el porcetaje de bloque de Erlang B)
-                #nB = 0.01 -> 1% [Se pierden 1 de cada 100 llamadas]
-                Pllamadas -= 1
-                if Pllamadas > 0:
+                if Llenador in LlamadasP:
+                    print("Llamada rechazada #",Llenador)
+                    Llenador +=1
+                    Rechazadas+=1
+                else:
                     Circuitos[i][j][1]=Llenador #Indicador del número de llamada
                     Circuitos[i][j][2]=H #Duración de la llamada
                     Llenador +=1
                     Aceptadas+=1
-                else:
-                    Circuitos[i][j][1]=Llenador #Indicador del número de llamada
-                    Circuitos[i][j][2]=0 #Duración de la llamada
-                    Llenador +=1
-                    Rechazadas+=1
-
-                    #Volvemos a las 100 llamadas
-                    Pllamadas = 100
             else:
                 Circuitos[i][j][2]-=1
     print(Circuitos)
-    time.sleep(mu)
+    #time.sleep(mu)
     Nllamada +=1
     Segundero = (Nllamada*Ritmoarribo)+(mu*26)
 
